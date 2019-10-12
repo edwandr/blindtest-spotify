@@ -59,6 +59,8 @@ class App extends Component {
   render() {
     if (this.state.areTracksLoaded) {
       const currentTrack = this.state.tracks[0].track;
+      const secondTrack = this.state.tracks[1].track;
+      const thirdTrack = this.state.tracks[2].track;
 
       return (
         <div className="App">
@@ -72,6 +74,11 @@ class App extends Component {
               url={currentTrack.preview_url}
               playStatus={Sound.status.PLAYING}
             />
+            <div className="App-buttons">
+              <Button>{currentTrack.name}</Button>
+              <Button>{secondTrack.name}</Button>
+              <Button>{thirdTrack.name}</Button>
+            </div>
           </div>
           <div className="App-buttons"></div>
         </div>
