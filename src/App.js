@@ -59,7 +59,14 @@ class App extends Component {
 
   checkAnswer(trackId) {
     if (trackId === this.state.currentTrack.id) {
-      swal("Bravo, c'est la bonne réponse", 'On continue ?', 'success');
+      swal("Bravo, c'est la bonne réponse", 'On continue ?', 'success').then(
+        () => {
+          const { tracks } = this.state;
+          this.setState({
+            currentTrack: tracks[getRandomNumber(tracks.length)].track
+          });
+        }
+      );
     } else {
       swal('Oops, mauvaise réponse', 'Try again', 'error');
     }
