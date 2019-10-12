@@ -71,6 +71,11 @@ class App extends Component {
     if (areTracksLoaded) {
       const secondTrack = tracks[getRandomNumber(tracks.length)].track;
       const thirdTrack = tracks[getRandomNumber(tracks.length)].track;
+      const blindtestTracks = shuffleArray([
+        currentTrack,
+        secondTrack,
+        thirdTrack
+      ]);
 
       return (
         <div className="App">
@@ -85,15 +90,11 @@ class App extends Component {
               playStatus={Sound.status.PLAYING}
             />
             <div className="App-buttons">
-              <Button onClick={() => this.checkAnswer(currentTrack.id)}>
-                {currentTrack.name}
-              </Button>
-              <Button onClick={() => this.checkAnswer(secondTrack.id)}>
-                {secondTrack.name}
-              </Button>
-              <Button onClick={() => this.checkAnswer(thirdTrack.id)}>
-                {thirdTrack.name}
-              </Button>
+              {blindtestTracks.map(track => (
+                <Button onClick={() => this.checkAnswer(track.id)}>
+                  {track.name}
+                </Button>
+              ))}
             </div>
           </div>
           <div className="App-buttons"></div>
