@@ -5,7 +5,8 @@ import logo from './logo.svg';
 import loading from './loading.svg';
 import './App.css';
 import Sound from 'react-sound';
-import Button from './Button';
+import Button from './components/Button/Button';
+import AlbumCover from './components/AlbumCover/AlbumCover';
 
 const apiToken =
   'BQBpJn3LKSwUhtgoPjihL1FJMQkIgg2GextoHJQUMp5omtD5dTo7PT994gn0O42_oUlzU-u-CMCKIwkpCsT7Q8ZOhPhQJJ_V8tbe15yRFTn7jciTodv-lDNFrgu11FnjOfbqx6dM4w69NGpwOXRfYK--21ndh-Fp7z5saNmL6vJEI-IHXvFGROc9SoUq8WUm39e5hUl582QxBdR_Cq4vQ5ayVhU81hDNryvdpzKLctIxp_NwnFj8Kq1aHqFwTQSUw_YItHrl6Z-KdVu37NljBA';
@@ -57,6 +58,8 @@ class App extends Component {
 
   render() {
     if (this.state.areTracksLoaded) {
+      const currentTrack = this.state.tracks[0].track;
+
       return (
         <div className="App">
           <header className="App-header">
@@ -64,11 +67,7 @@ class App extends Component {
             <h1 className="App-title">Bienvenue sur le Blindtest</h1>
           </header>
           <div className="App-images">
-            <p>Nombre de morceaux reçus : {this.state.tracks.length}</p>
-            <p>
-              Titre de la première chanson :{' '}
-              {this.state.tracks.length > 0 && this.state.tracks[0].track.name}
-            </p>
+            <AlbumCover track={currentTrack} />
           </div>
           <div className="App-buttons"></div>
         </div>
