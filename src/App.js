@@ -65,6 +65,10 @@ class App extends Component {
           </header>
           <div className="App-images">
             <p>Nombre de morceaux reçus : {this.state.tracks.length}</p>
+            <p>
+              Titre de la première chanson :{' '}
+              {this.state.tracks.length > 0 && this.state.tracks[0].track.name}
+            </p>
           </div>
           <div className="App-buttons"></div>
         </div>
