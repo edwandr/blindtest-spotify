@@ -59,7 +59,9 @@ class App extends Component {
 
   checkAnswer(trackId) {
     if (trackId === this.state.currentTrack.id) {
-      swal("Bravo, c'est la bonne réponse", 'On recommence ?', 'success');
+      swal("Bravo, c'est la bonne réponse", 'On continue ?', 'success');
+    } else {
+      swal('Oops, mauvaise réponse', 'Try again', 'error');
     }
   }
 
