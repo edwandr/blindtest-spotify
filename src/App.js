@@ -35,7 +35,8 @@ class App extends Component {
     super();
     this.state = {
       areTracksLoaded: false,
-      tracks: []
+      tracks: [],
+      currentTrack: null
     };
   }
 
@@ -48,17 +49,24 @@ class App extends Component {
     })
       .then(response => response.json())
       .then(data => {
-        console.log("Réponse reçue ! Voilà ce que j'ai reçu : ", data);
         this.setState({
           areTracksLoaded: true,
-          tracks: data.items
+          tracks: data.items,
+          currentTrack: data.items[0].track
         });
       });
   }
 
+  checkAnswer(trackId) {
+    if (trackId === this.state.currentTrack.id) {
+      swal("Bravo, c'est la bonne réponse", 'On recommence ?', 'success');
+    }
+  }
+
   render() {
-    if (this.state.areTracksLoaded) {
-      const currentTrack = this.state.tracks[0].track;
+    const { currentTrack, areTracksLoaded } = this.state;
+
+    if (areTracksLoaded) {
       const secondTrack = this.state.tracks[1].track;
       const thirdTrack = this.state.tracks[2].track;
 
@@ -75,9 +83,15 @@ class App extends Component {
               playStatus={Sound.status.PLAYING}
             />
             <div className="App-buttons">
-              <Button>{currentTrack.name}</Button>
-              <Button>{secondTrack.name}</Button>
-              <Button>{thirdTrack.name}</Button>
+              <Button onClick={() => this.checkAnswer(currentTrack.id)}>
+                {currentTrack.name}
+              </Button>
+              <Button onClick={() => this.checkAnswer(secondTrack.id)}>
+                {secondTrack.name}
+              </Button>
+              <Button onClick={() => this.checkAnswer(thirdTrack.id)}>
+                {thirdTrack.name}
+              </Button>
             </div>
           </div>
           <div className="App-buttons"></div>
