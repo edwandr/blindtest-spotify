@@ -33,7 +33,8 @@ class App extends Component {
   constructor() {
     super();
     this.state = {
-      areSongsLoaded: false
+      areTracksLoaded: false,
+      tracks: []
     };
   }
 
@@ -48,13 +49,14 @@ class App extends Component {
       .then(data => {
         console.log("Réponse reçue ! Voilà ce que j'ai reçu : ", data);
         this.setState({
-          areSongsLoaded: true
+          areTracksLoaded: true,
+          tracks: data.items
         });
       });
   }
 
   render() {
-    if (this.state.areSongsLoaded) {
+    if (this.state.areTracksLoaded) {
       return (
         <div className="App">
           <header className="App-header">
@@ -62,7 +64,7 @@ class App extends Component {
             <h1 className="App-title">Bienvenue sur le Blindtest</h1>
           </header>
           <div className="App-images">
-            <p>Il va falloir modifier le code pour faire un vrai Blindtest !</p>
+            <p>Nombre de morceaux reçus : {this.state.tracks.length}</p>
           </div>
           <div className="App-buttons"></div>
         </div>
