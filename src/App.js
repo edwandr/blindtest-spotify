@@ -9,7 +9,7 @@ import Button from './components/Button/Button';
 import AlbumCover from './components/AlbumCover/AlbumCover';
 
 const apiToken =
-  'BQBpJn3LKSwUhtgoPjihL1FJMQkIgg2GextoHJQUMp5omtD5dTo7PT994gn0O42_oUlzU-u-CMCKIwkpCsT7Q8ZOhPhQJJ_V8tbe15yRFTn7jciTodv-lDNFrgu11FnjOfbqx6dM4w69NGpwOXRfYK--21ndh-Fp7z5saNmL6vJEI-IHXvFGROc9SoUq8WUm39e5hUl582QxBdR_Cq4vQ5ayVhU81hDNryvdpzKLctIxp_NwnFj8Kq1aHqFwTQSUw_YItHrl6Z-KdVu37NljBA';
+  'BQCVA_PB8Mty4iQotUkHDIROjpcgwln1hMWjj5iS-2c1kdmAki3iuUmG68kPC4wkseuzAan6plzW-r718YnBjeD_f9kuRtNZ4fImehK6hxSsYYnBmFHig4jc7W_qrZA8yRnWZ5D5hxZvUJNyGyY7JUHzs_zMPq6TSyIfItw-YIuAwy-_papFFYEZX1DmILciIh5dhZ_vr3bvOEC8N-6iYmvJzBkZB0lTeFvthWVG9RZRZKnJ8XYg2IJmmSiKCym__tBYa_RkKHYE_IonNTVCEA';
 
 function shuffleArray(array) {
   let counter = array.length;
@@ -36,11 +36,13 @@ class App extends Component {
     this.state = {
       areTracksLoaded: false,
       tracks: [],
-      currentTrack: null
+      currentTrack: null,
+      expireTimeout: null
     };
   }
 
   componentDidMount() {
+    const expireTimeout = setTimeout(() => this.changeTrack(), 30000);
     fetch('https://api.spotify.com/v1/me/tracks', {
       method: 'GET',
       headers: {
@@ -52,24 +54,43 @@ class App extends Component {
         this.setState({
           areTracksLoaded: true,
           tracks: data.items,
-          currentTrack: data.items[getRandomNumber(data.items.length)].track
+          currentTrack: data.items[getRandomNumber(data.items.length)].track,
+          expireTimeout
         });
       });
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (
+      prevState.currentTrack &&
+      this.state.currentTrack &&
+      prevState.currentTrack.id !== this.state.currentTrack.id
+    ) {
+      const expireTimeout = setTimeout(() => this.changeTrack(), 30000);
+      this.setState({
+        expireTimeout
+      });
+    }
   }
 
   checkAnswer(trackId) {
     if (trackId === this.state.currentTrack.id) {
       swal("Bravo, c'est la bonne réponse", 'On continue ?', 'success').then(
         () => {
-          const { tracks } = this.state;
-          this.setState({
-            currentTrack: tracks[getRandomNumber(tracks.length)].track
-          });
+          this.changeTrack();
+          clearTimeout(this.state.expireTimeout);
         }
       );
     } else {
       swal('Oops, mauvaise réponse', 'Try again', 'error');
     }
+  }
+
+  changeTrack() {
+    const { tracks } = this.state;
+    this.setState({
+      currentTrack: tracks[getRandomNumber(tracks.length)].track
+    });
   }
 
   render() {
@@ -97,8 +118,11 @@ class App extends Component {
               playStatus={Sound.status.PLAYING}
             />
             <div className="App-buttons">
-              {blindtestTracks.map(track => (
-                <Button onClick={() => this.checkAnswer(track.id)}>
+              {blindtestTracks.map((track, index) => (
+                <Button
+                  key={`${track.id}-${index}`}
+                  onClick={() => this.checkAnswer(track.id)}
+                >
                   {track.name}
                 </Button>
               ))}
