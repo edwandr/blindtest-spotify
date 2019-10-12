@@ -52,7 +52,7 @@ class App extends Component {
         this.setState({
           areTracksLoaded: true,
           tracks: data.items,
-          currentTrack: data.items[0].track
+          currentTrack: data.items[getRandomNumber(data.items.length)].track
         });
       });
   }
@@ -66,17 +66,17 @@ class App extends Component {
   }
 
   render() {
-    const { currentTrack, areTracksLoaded } = this.state;
+    const { currentTrack, areTracksLoaded, tracks } = this.state;
 
     if (areTracksLoaded) {
-      const secondTrack = this.state.tracks[1].track;
-      const thirdTrack = this.state.tracks[2].track;
+      const secondTrack = tracks[getRandomNumber(tracks.length)].track;
+      const thirdTrack = tracks[getRandomNumber(tracks.length)].track;
 
       return (
         <div className="App">
           <header className="App-header">
             <img src={logo} className="App-logo" alt="logo" />
-            <h1 className="App-title">Bienvenue sur le Blindtest</h1>
+            <h1 className="App-title">Wow Crazy Blindtest</h1>
           </header>
           <div className="App-images">
             <AlbumCover track={currentTrack} />
