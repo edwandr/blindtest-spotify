@@ -68,6 +68,10 @@ class App extends Component {
           </header>
           <div className="App-images">
             <AlbumCover track={currentTrack} />
+            <Sound
+              url={currentTrack.preview_url}
+              playStatus={Sound.status.PLAYING}
+            />
           </div>
           <div className="App-buttons"></div>
         </div>
