@@ -51,10 +51,11 @@ class App extends Component {
     })
       .then(response => response.json())
       .then(data => {
+        const currentTrackIndex = getRandomNumber(data.items.length);
         this.setState({
           areTracksLoaded: true,
           tracks: data.items,
-          currentTrack: data.items[getRandomNumber(data.items.length)].track,
+          currentTrack: data.items[currentTrackIndex].track,
           expireTimeout
         });
       });
@@ -93,18 +94,36 @@ class App extends Component {
     });
   }
 
+  getTrackOptions() {
+    const { currentTrack } = this.state;
+    const displayedTracksIds = [currentTrack.id];
+
+    const secondTrack = this.getNonDisplayedTrack(displayedTracksIds);
+    displayedTracksIds.push(secondTrack.id);
+    const thirdTrack = this.getNonDisplayedTrack(displayedTracksIds);
+
+    return shuffleArray([currentTrack, secondTrack, thirdTrack]);
+  }
+
+  getNonDisplayedTrack(displayedTracksIds) {
+    const { tracks } = this.state;
+
+    let randomTrackIndex = getRandomNumber(tracks.length);
+    let track = tracks[randomTrackIndex].track;
+
+    while (displayedTracksIds.includes(track.id)) {
+      randomTrackIndex = getRandomNumber(tracks.length);
+      track = tracks[randomTrackIndex].track;
+    }
+
+    return track;
+  }
+
   render() {
-    const { currentTrack, areTracksLoaded, tracks } = this.state;
+    const { areTracksLoaded, currentTrack } = this.state;
 
     if (areTracksLoaded) {
-      const secondTrack = tracks[getRandomNumber(tracks.length)].track;
-      const thirdTrack = tracks[getRandomNumber(tracks.length)].track;
-      const blindtestTracks = shuffleArray([
-        currentTrack,
-        secondTrack,
-        thirdTrack
-      ]);
-
+      const trackOptions = this.getTrackOptions();
       return (
         <div className="App">
           <header className="App-header">
@@ -118,7 +137,7 @@ class App extends Component {
               playStatus={Sound.status.PLAYING}
             />
             <div className="App-buttons">
-              {blindtestTracks.map((track, index) => (
+              {trackOptions.map((track, index) => (
                 <Button
                   key={`${track.id}-${index}`}
                   onClick={() => this.checkAnswer(track.id)}
